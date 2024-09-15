@@ -15,7 +15,7 @@ func Get(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
-	board := service.Get(req.IP, req.Port, req.MAC)
+	board := service.Get(req.IP, req.Port)
 	c.JSON(http.StatusOK, util.NewResponse(http.StatusOK, "success", board))
 }
 
@@ -23,4 +23,14 @@ func Get(c *gin.Context) {
 func All(c *gin.Context) {
 	allInLan := service.All()
 	c.JSON(http.StatusOK, util.NewResponse(http.StatusOK, "success", allInLan))
+}
+
+func Probe(c *gin.Context) {
+	var req util.ProbeRequest
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+	boards := service.Probe(req.ID)
+	c.JSON(http.StatusOK, util.NewResponse(http.StatusOK, "success", boards))
 }

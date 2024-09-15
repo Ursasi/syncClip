@@ -11,17 +11,21 @@ import (
 
 // Register a new machine
 func Register(c *gin.Context) {
-	var req util.RegisterRequest
-	if err := c.BindJSON(&req); err != nil {
+	ip, port, err := util.ParseIPNPort(c)
+	if err != nil {
+		log.Printf("Failed to parse IP and port: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
-	_, err := service.GetOrAllocate(req.Host, req.Port, req.MAC)
+	ID, err := service.GetOrAllocate(ip, port)
 	if err != nil {
-		log.Printf("Failed to allocate ID for host %s: %v", req.Host, err)
+		log.Printf("Failed to allocate ID for host %s: %v", ip, err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	all := service.All()
-	c.JSON(http.StatusOK, util.NewResponse(http.StatusOK, "success", all))
+	boards := service.All()
+	c.JSON(http.StatusOK, util.NewResponse(http.StatusOK, "success", util.RegisterResponse{
+		ID:     ID,
+		Boards: boards,
+	}))
 }

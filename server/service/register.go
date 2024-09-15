@@ -2,24 +2,23 @@ package service
 
 import "strconv"
 
-func GetOrAllocate(ip, port, mac string) (string, error) {
-	exist := B.Exist(ip, port, mac)
+func GetOrAllocate(ip, port string) (string, error) {
+	exist := B.Exist(ip, port)
 	if exist {
-		return B.Get(ip, port, mac).ID, nil
+		return B.Get(ip, port).ID, nil
 	}
-	id, err := allocate(ip, port, mac)
+	id, err := allocate(ip, port)
 	if err != nil {
 		return "", err
 	}
 	return id, nil
 }
 
-func allocate(ip, port, mac string) (string, error) {
-	hash := B.Hash(ip + port + mac)
+func allocate(ip, port string) (string, error) {
+	hash := Hash(ip + port)
 	board := Board{
 		IP:   ip,
 		Port: port,
-		MAC:  mac,
 		ID:   strconv.Itoa(int(hash)),
 	}
 	_, err := B.Add(board)

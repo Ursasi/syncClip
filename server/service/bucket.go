@@ -4,6 +4,8 @@ import (
 	"errors"
 	"hash/fnv"
 	"strconv"
+	constant "syncClip"
+	"time"
 )
 
 var B Bucket
@@ -13,10 +15,10 @@ type Bucket struct {
 }
 
 type Board struct {
-	IP   string
-	Port string
-	MAC  string
-	ID   string
+	IP         string
+	Port       string
+	ID         string
+	ProbeStamp time.Time
 }
 
 func InitBucket() {
@@ -26,35 +28,35 @@ func InitBucket() {
 }
 
 func (b *Bucket) Add(board Board) (int, error) {
-	if b.Exist(board.IP, board.Port, board.MAC) {
+	if b.Exist(board.IP, board.Port) {
 		return 0, errors.New("board already exist")
 	}
-	hashValue := b.Hash(board.IP + board.Port + board.MAC)
+	hashValue := Hash(board.IP + board.Port)
 	b.m[strconv.Itoa(int(hashValue))] = board
 	return len(b.m), nil
 }
 
-func (b *Bucket) Get(ip, port, mac string) Board {
-	hashValue := b.Hash(ip + port + mac)
+func (b *Bucket) Get(ip, port string) Board {
+	hashValue := Hash(ip + port)
 	return b.m[strconv.Itoa(int(hashValue))]
 }
 
-func (b *Bucket) Del(ip, port, mac string) (int, error) {
-	if b.Exist(ip, port, mac) {
+func (b *Bucket) Del(ip, port string) (int, error) {
+	if b.Exist(ip, port) {
 		return 0, errors.New("board not exist")
 	}
-	hashValue := b.Hash(ip + port + mac)
+	hashValue := Hash(ip + port)
 	delete(b.m, strconv.Itoa(int(hashValue)))
 	return len(b.m), nil
 }
 
-func (b *Bucket) Exist(ip, port, mac string) bool {
-	hashValue := b.Hash(ip + port + mac)
+func (b *Bucket) Exist(ip, port string) bool {
+	hashValue := Hash(ip + port)
 	_, ok := b.m[strconv.Itoa(int(hashValue))]
 	return ok
 }
 
-func (b *Bucket) Hash(s string) uint32 {
+func Hash(s string) uint32 {
 	h := fnv.New32a()
 	_, err := h.Write([]byte(s))
 	if err != nil {
@@ -69,4 +71,19 @@ func (b *Bucket) M2L() []Board {
 		l = append(l, v)
 	}
 	return l
+}
+
+func (b *Bucket) L2M(l []Board) {
+	for _, v := range l {
+		hashValue := Hash(v.IP + v.Port)
+		b.m[strconv.Itoa(int(hashValue))] = v
+	}
+}
+
+func (b *Bucket) Clean() {
+	for k, v := range b.m {
+		if time.Since(v.ProbeStamp) > constant.DefaultProbeInterval {
+			delete(b.m, k)
+		}
+	}
 }
