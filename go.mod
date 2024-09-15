@@ -3,6 +3,7 @@ module syncClip
 go 1.22
 
 require (
+	github.com/atotto/clipboard v0.1.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/pflag v1.0.5

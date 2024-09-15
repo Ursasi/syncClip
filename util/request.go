@@ -20,3 +20,6 @@ type RegisterRequest struct {
 	Port string `json:"port"`
 	MAC  string `json:"mac"`
 }
+type ReceiveRequest struct {
+	Msg string
+}

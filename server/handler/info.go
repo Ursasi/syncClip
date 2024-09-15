@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"syncClip/server/service"
-	"syncClip/server/util"
+	"syncClip/util"
 )
 
 // Get by ID and return the machine info

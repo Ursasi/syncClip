@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 	"syncClip/server/service"
-	"syncClip/server/util"
+	"syncClip/util"
 )
 
 // Register a new machine

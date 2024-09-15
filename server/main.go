@@ -3,11 +3,11 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin"          // 导入 Gin 框架
-	"github.com/pkg/errors"             // 导入 errors 包用于错误包装
-	"github.com/spf13/pflag"            // 导入 pflag 包来处理标志
-	"github.com/spf13/viper"            // 导入 viper 来处理配置
-	"go.uber.org/automaxprocs/maxprocs" // 导入 maxprocs 来自动设置最大进程数
+	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
+	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
+	"go.uber.org/automaxprocs/maxprocs"
 	"syncClip/server/handler"
 	"syncClip/server/service"
 )
@@ -27,7 +27,6 @@ const (
 var serverConfig ServerConfig
 
 func init() {
-	// 使用 pflag 代替标准 flag 包
 	pflag.StringVar(&serverConfig.Address, "address", "0.0.0.0", "The HTTP Server listen address for syncClip service.")
 	pflag.IntVar(&serverConfig.Port, "port", defaultPort, "The HTTP Server listen port for kb-agent service.")
 	pflag.IntVar(&serverConfig.Concurrency, "max-concurrency", defaultMaxConcurrency,
