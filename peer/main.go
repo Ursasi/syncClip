@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"runtime"
+	"syncClip/peer/handler"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"go.uber.org/automaxprocs/maxprocs"
-	"runtime"
-	"syncClip/peer/handler"
 )
 
 type PeerConfig struct {

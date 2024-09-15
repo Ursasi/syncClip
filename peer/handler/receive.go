@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"syncClip/peer/service"
 	"syncClip/util"
+
+	"github.com/gin-gonic/gin"
 )
 
 func Receive(c *gin.Context) {

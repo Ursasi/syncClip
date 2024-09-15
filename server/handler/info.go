@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"syncClip/server/service"
 	"syncClip/util"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Get by ID and return the machine info

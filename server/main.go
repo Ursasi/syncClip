@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"syncClip/server/handler"
+	"syncClip/server/service"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"go.uber.org/automaxprocs/maxprocs"
-	"syncClip/server/handler"
-	"syncClip/server/service"
 )
 
 type ServerConfig struct {

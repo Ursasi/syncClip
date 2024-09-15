@@ -1,11 +1,12 @@
 package handler
 
 import (
-	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
 	"syncClip/server/service"
 	"syncClip/util"
+
+	"github.com/gin-gonic/gin"
 )
 
 // Register a new machine

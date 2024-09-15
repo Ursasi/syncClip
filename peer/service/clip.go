@@ -1,8 +1,9 @@
 package service
 
 import (
-	"github.com/atotto/clipboard"
 	"syncClip/util"
+
+	"github.com/atotto/clipboard"
 )
 
 func Send() (bool, error) {
