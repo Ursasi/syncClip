@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"runtime"
+	"sync"
 	constant "syncClip"
 	"syncClip/peer/handler"
 	"syncClip/server/service"
@@ -33,6 +34,8 @@ type Config struct {
 type State struct {
 	ID     string
 	Boards []service.Board
+	mu     sync.Mutex
+	Cond   *sync.Cond
 }
 
 var PeerState State
@@ -51,6 +54,7 @@ func StartPeer(config Config) {
 func startBackgroundTask() {
 	var err error
 	PeerState.ID, PeerState.Boards, err = registerPeer()
+	PeerState.Cond = sync.NewCond(&PeerState.mu)
 	if err != nil {
 		return
 	}
@@ -138,7 +142,14 @@ func startProbe() error {
 		log.Println(errors.Wrap(err, "json unmarshal failed"))
 		return errors.Wrap(err, "json unmarshal failed")
 	}
-	PeerState.Boards = response.Boards
+	PeerState.mu.Lock()
+	defer PeerState.mu.Unlock()
+
+	changed := hasBoardsChanged(PeerState.Boards, response.Boards)
+	if changed {
+		PeerState.Boards = response.Boards
+		PeerState.Cond.Broadcast()
+	}
 	return nil
 }
 
@@ -152,4 +163,24 @@ func startProbePeriodically() error {
 		}
 	}
 	return nil
+}
+
+func hasBoardsChanged(oldBoards, newBoards []service.Board) bool {
+	if len(oldBoards) != len(newBoards) {
+		return true
+	}
+	oldMap := make(map[string]service.Board)
+	for _, board := range oldBoards {
+		oldMap[board.ID] = board
+	}
+	for _, board := range newBoards {
+		if oldBoard, exists := oldMap[board.ID]; !exists || !isBoardEqual(oldBoard, board) {
+			return true
+		}
+	}
+	return false
+}
+
+func isBoardEqual(a, b service.Board) bool {
+	return a.ID == b.ID && a.IP == b.IP && a.Port == b.Port
 }

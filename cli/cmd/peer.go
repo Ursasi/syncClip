@@ -5,7 +5,6 @@ import (
 	constant "syncClip"
 	"syncClip/peer"
 	"syncClip/util"
-	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -23,19 +22,20 @@ var peersCmd = &cobra.Command{
 	Short: "list connected peer nodes",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("all peer nodes:")
-		table := util.ConfigTable()
-		data := [][]string{
-			{"10.233.4.1", "1234", "SKFNCKFLS.SKGNCJH"},
-			{"10.233.4.2", "4502", "YXNVKNKFK.SXKFNXJ"},
-			{"10.233.4.3", "3501", "SNCHSKLFM.LKFHXXJ"},
-			{"10.233.4.4", "5042", "QFCKVMFJV.ONFMSKL"},
-		}
-		table.AppendBulk(data)
-		for {
-			util.ClearScreen()
-			util.ShowPeers(table)
-			time.Sleep(3 * time.Second)
-		}
+		//table := util.ConfigTable()
+		//data := [][]string{
+		//	{"10.233.4.1", "1234", "SKFNCKFLS.SKGNCJH"},
+		//	{"10.233.4.2", "4502", "YXNVKNKFK.SXKFNXJ"},
+		//	{"10.233.4.3", "3501", "SNCHSKLFM.LKFHXXJ"},
+		//	{"10.233.4.4", "5042", "QFCKVMFJV.ONFMSKL"},
+		//}
+		//table.AppendBulk(data)
+		//for {
+		//	util.ClearScreen()
+		//	util.ShowPeers(table)
+		//	time.Sleep(3 * time.Second)
+		//}
+		util.WatchBoard()
 	},
 }
 
